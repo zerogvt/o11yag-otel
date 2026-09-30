@@ -6,7 +6,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: o11yag-knowledge-worker-config
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-knowledge-worker
     app.kubernetes.io/component: knowledge-worker
@@ -73,7 +73,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: o11yag-knowledge-worker
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-knowledge-worker
     app.kubernetes.io/component: knowledge-worker
@@ -92,7 +92,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: o11yag-knowledge-worker
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-knowledge-worker
     app.kubernetes.io/component: knowledge-worker

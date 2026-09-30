@@ -207,7 +207,7 @@ in it.
    naming the missing scope, which is silent from Grail's side and obvious in the
    Collector's own log:
    ```
-   kubectl logs -l app.kubernetes.io/name=o11yag-otel-collector -n o11yag \
+   kubectl logs -l app.kubernetes.io/name=o11yag-otel-collector -n o11yag-otel \
      | grep -i "missing required scope"
    ```
 
@@ -218,7 +218,7 @@ in it.
    `build_deploy.sh` restarts the Collector whenever it rewrites the Secret; if
    you change it by hand, do it yourself:
    ```
-   kubectl rollout restart deployment/o11yag-otel-collector -n o11yag
+   kubectl rollout restart deployment/o11yag-otel-collector -n o11yag-otel
    ```
 
 3. **Build and deploy**:
@@ -249,8 +249,8 @@ in it.
 
 5. **Watch it work**:
    ```
-   kubectl get pods -n o11yag -w
-   kubectl logs -l app.kubernetes.io/name=o11yag-loadgen -n o11yag -f
+   kubectl get pods -n o11yag-otel -w
+   kubectl logs -l app.kubernetes.io/name=o11yag-loadgen -n o11yag-otel -f
    ```
 
 Redeploy without rebuilding with `bash build_deploy.sh --no-build`. `stop.sh`
@@ -685,7 +685,7 @@ work, and it is worth being exact about which of them you get for free:
 
 **Send a ticket** to the orchestrator:
 ```
-kubectl port-forward service/o11yag-orchestrator 8000:8000 -n o11yag
+kubectl port-forward service/o11yag-orchestrator 8000:8000 -n o11yag-otel
 
 curl -X POST http://localhost:8000/chat -H 'Content-Type: application/json' \
   -d '{"ticket_id":"TK-1","customer_id":"C-7","tenant":"acme",
@@ -704,27 +704,27 @@ curl -X POST http://localhost:8000/feedback -H 'Content-Type: application/json' 
 
 **The approvals page**:
 ```
-kubectl port-forward service/o11yag-approvals 8004:8004 -n o11yag
+kubectl port-forward service/o11yag-approvals 8004:8004 -n o11yag-otel
 # then open http://localhost:8004/
 ```
 
 **Ask the knowledge worker directly**:
 ```
-kubectl port-forward service/o11yag-knowledge-worker 8001:8001 -n o11yag
+kubectl port-forward service/o11yag-knowledge-worker 8001:8001 -n o11yag-otel
 curl -X POST http://localhost:8001/answer -H 'Content-Type: application/json' \
   -d '{"ticket_id":"TK-2","text":"How long do refunds take?"}'
 ```
 
 **Check the model gateway**:
 ```
-kubectl port-forward service/litellm 4000:4000 -n o11yag
+kubectl port-forward service/litellm 4000:4000 -n o11yag-otel
 curl http://localhost:4000/v1/models
 ```
 
 **If every MCP tool call fails with 421**, the action worker is reaching the
 server by a name the allowlist doesn't cover. The server says so:
 ```
-kubectl logs -l app.kubernetes.io/name=o11yag-mcp-crm -n o11yag | grep -i "host"
+kubectl logs -l app.kubernetes.io/name=o11yag-mcp-crm -n o11yag-otel | grep -i "host"
 #   WARNING mcp.server.transport_security Invalid Host header: <the name>
 #   INFO    ... "POST /mcp HTTP/1.1" 421 Misdirected Request
 ```
@@ -732,7 +732,7 @@ Add that name to `MCP_ALLOWED_HOSTS` in `mcp-crm/k8s/o11yag-mcp-crm.yaml` and
 roll the pod. The server logs its allowlist on boot, so you can check what it
 believes it accepts.
 
-**Watch what the Collector is forwarding**: `kubectl logs -l app.kubernetes.io/name=o11yag-otel-collector -n o11yag -f`
+**Watch what the Collector is forwarding**: `kubectl logs -l app.kubernetes.io/name=o11yag-otel-collector -n o11yag-otel -f`
 
 ### Turning the interesting cases on
 

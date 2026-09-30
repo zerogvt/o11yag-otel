@@ -15,7 +15,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: o11yag-litellm-config
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-litellm
     app.kubernetes.io/component: model-gateway
@@ -54,7 +54,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: litellm
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-litellm
     app.kubernetes.io/component: model-gateway
@@ -73,7 +73,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: o11yag-litellm
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-litellm
     app.kubernetes.io/component: model-gateway

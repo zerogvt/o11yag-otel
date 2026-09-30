@@ -262,7 +262,7 @@ The decorators are not decoration: that tree *is* the trace you see in Dynatrace
 ## 5. Try it
 
 ```
-kubectl port-forward service/o11yag-orchestrator 8000:8000 -n o11yag
+kubectl port-forward service/o11yag-orchestrator 8000:8000 -n o11yag-otel
 
 curl -X POST http://localhost:8000/chat -H 'Content-Type: application/json' \
   -d '{"ticket_id":"LEARN-1","customer_id":"C-7","tenant":"acme",

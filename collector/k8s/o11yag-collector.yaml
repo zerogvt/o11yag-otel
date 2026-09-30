@@ -6,7 +6,7 @@
 # BEFORE APPLYING: create the Dynatrace credential as a Secret. build_deploy.sh
 # does this for you; by hand it is:
 #
-#   kubectl -n o11yag create secret generic o11yag-collector \
+#   kubectl -n o11yag-otel create secret generic o11yag-collector \
 #     --from-literal=DT_OTLP_ENDPOINT='https://<env-id>.live.dynatrace.com/api/v2/otlp' \
 #     --from-literal=DT_API_TOKEN='dt0c01.XXXX.XXXX'
 #
@@ -22,7 +22,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: o11yag-otel-collector-config
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-otel-collector
     app.kubernetes.io/component: collector
@@ -86,7 +86,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: o11yag-otel-collector
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-otel-collector
     app.kubernetes.io/component: collector
@@ -171,7 +171,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: otel-collector
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-otel-collector
     app.kubernetes.io/component: collector

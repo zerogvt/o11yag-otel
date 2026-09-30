@@ -2,13 +2,13 @@
 #
 # Emits no telemetry of its own; it only makes the rest of the stack produce
 # some. Watch what it is doing with:
-#   kubectl logs -l app.kubernetes.io/name=o11yag-loadgen -n o11yag -f
+#   kubectl logs -l app.kubernetes.io/name=o11yag-loadgen -n o11yag-otel -f
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: o11yag-loadgen-config
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-loadgen
     app.kubernetes.io/component: loadgen
@@ -26,14 +26,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: o11yag-loadgen
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-loadgen
     app.kubernetes.io/component: loadgen
     app.kubernetes.io/part-of: o11yag
 spec:
   # Scale to 0 to stop the traffic without deleting anything:
-  #   kubectl scale deploy/o11yag-loadgen --replicas=0 -n o11yag
+  #   kubectl scale deploy/o11yag-loadgen --replicas=0 -n o11yag-otel
   replicas: 1
   revisionHistoryLimit: 3
   selector:
