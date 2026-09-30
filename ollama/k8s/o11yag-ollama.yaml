@@ -12,7 +12,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: o11yag-ollama-models
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: ollama
     app.kubernetes.io/component: llm-backend
@@ -28,7 +28,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: o11yag-ollama
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: ollama
     app.kubernetes.io/component: llm-backend
@@ -144,7 +144,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ollama
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: ollama
     app.kubernetes.io/component: llm-backend

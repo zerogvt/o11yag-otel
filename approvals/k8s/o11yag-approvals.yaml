@@ -1,7 +1,7 @@
 # o11yag — approval gate (human-in-the-loop): complete manifest set.
 #
 # The reviewer page is at / — reach it with:
-#   kubectl port-forward service/o11yag-approvals 8004:8004 -n o11yag
+#   kubectl port-forward service/o11yag-approvals 8004:8004 -n o11yag-otel
 # It only has anything to show when AUTO_APPROVE is false, or when a
 # refund is over AUTO_APPROVE_MAX_EUR.
 # Apply with:  kubectl apply -f o11yag-approvals.yaml
@@ -10,7 +10,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: o11yag-approvals-config
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-approvals
     app.kubernetes.io/component: approvals
@@ -41,7 +41,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: o11yag-approvals
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-approvals
     app.kubernetes.io/component: approvals
@@ -60,7 +60,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: o11yag-approvals
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: o11yag-approvals
     app.kubernetes.io/component: approvals

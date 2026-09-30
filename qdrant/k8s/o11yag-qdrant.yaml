@@ -7,7 +7,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: o11yag-qdrant-storage
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: qdrant
     app.kubernetes.io/component: vector-store
@@ -23,7 +23,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: qdrant
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: qdrant
     app.kubernetes.io/component: vector-store
@@ -42,7 +42,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: o11yag-qdrant
-  namespace: o11yag
+  namespace: o11yag-otel
   labels:
     app.kubernetes.io/name: qdrant
     app.kubernetes.io/component: vector-store

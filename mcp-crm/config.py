@@ -31,8 +31,8 @@ class Config:
     MCP_ALLOWED_HOSTS = _list(
         "MCP_ALLOWED_HOSTS",
         "o11yag-mcp-crm:*,"
-        "o11yag-mcp-crm.o11yag:*,"
-        "o11yag-mcp-crm.o11yag.svc.cluster.local:*,"
+        "o11yag-mcp-crm.o11yag-otel:*,"
+        "o11yag-mcp-crm.o11yag-otel.svc.cluster.local:*,"
         # kubectl port-forward, for the debug commands in the README
         "localhost:*,127.0.0.1:*",
     )

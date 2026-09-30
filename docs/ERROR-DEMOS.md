@@ -32,7 +32,7 @@ The cleanest demo: only order actions fail, so the tile lands at a believable
 partial rate instead of jumping to most of the traffic.
 
 ```
-kubectl scale deployment/o11yag-mcp-crm -n o11yag --replicas=0
+kubectl scale deployment/o11yag-mcp-crm -n o11yag-otel --replicas=0
 ```
 
 Leave loadgen running for 5–10 minutes.
@@ -63,7 +63,7 @@ Leave it down longer if you want a bigger number.
 Put it back:
 
 ```
-kubectl scale deployment/o11yag-mcp-crm -n o11yag --replicas=1
+kubectl scale deployment/o11yag-mcp-crm -n o11yag-otel --replicas=1
 ```
 
 ---
@@ -74,7 +74,7 @@ Every policy question fails at the orchestrator's hop. Loud and immediate —
 connection refused, no waiting on a timeout.
 
 ```
-kubectl scale deployment/o11yag-knowledge-worker -n o11yag --replicas=0
+kubectl scale deployment/o11yag-knowledge-worker -n o11yag-otel --replicas=0
 ```
 
 **What you should see:** the tile at roughly **65%** (15 of 23 weighted tickets
@@ -84,7 +84,7 @@ and the orchestrator log printing `worker call failed` with a traceback.
 Put it back:
 
 ```
-kubectl scale deployment/o11yag-knowledge-worker -n o11yag --replicas=1
+kubectl scale deployment/o11yag-knowledge-worker -n o11yag-otel --replicas=1
 ```
 
 The Qdrant collection is on a volume, so the worker comes back without
@@ -109,8 +109,8 @@ pod on its own (see [`SECURITY-DEMOS.md`](SECURITY-DEMOS.md) §0):
 
 ```
 kubectl apply -f orchestrator/k8s/o11yag-orchestrator.yaml
-kubectl rollout restart deployment/o11yag-orchestrator -n o11yag
-kubectl exec deploy/o11yag-orchestrator -n o11yag -- printenv WORKER_TIMEOUT_S
+kubectl rollout restart deployment/o11yag-orchestrator -n o11yag-otel
+kubectl exec deploy/o11yag-orchestrator -n o11yag-otel -- printenv WORKER_TIMEOUT_S
 ```
 
 **What you should see:** `ReadTimeout` on `delegate_to_worker` spans, and an
@@ -126,7 +126,7 @@ Set it back to `"300"` and redeploy.
 
 ```
 kubectl scale deployment/o11yag-mcp-crm deployment/o11yag-knowledge-worker \
-  -n o11yag --replicas=1
+  -n o11yag-otel --replicas=1
 ```
 
 and make sure `WORKER_TIMEOUT_S` is `"300"` again. Re-running `build_deploy.sh`

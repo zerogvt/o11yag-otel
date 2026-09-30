@@ -28,14 +28,14 @@ yourself:
 
 ```
 kubectl apply -f knowledge-worker/k8s/o11yag-knowledge-worker.yaml
-kubectl rollout restart deployment/o11yag-knowledge-worker -n o11yag
-kubectl rollout status  deployment/o11yag-knowledge-worker -n o11yag
+kubectl rollout restart deployment/o11yag-knowledge-worker -n o11yag-otel
+kubectl rollout status  deployment/o11yag-knowledge-worker -n o11yag-otel
 ```
 
 **Always verify the setting actually landed** before concluding the demo failed:
 
 ```
-kubectl exec deploy/o11yag-knowledge-worker -n o11yag -- printenv KB_POISON_DOC
+kubectl exec deploy/o11yag-knowledge-worker -n o11yag-otel -- printenv KB_POISON_DOC
 ```
 
 That one command would have saved every debugging session that led to this page.
@@ -66,7 +66,7 @@ Redeploy or restart, then confirm the corpus actually grew from 8 documents to 9
 counts on boot and reseeds only when they differ:
 
 ```
-kubectl logs -l app.kubernetes.io/name=o11yag-knowledge-worker -n o11yag | grep -i seed
+kubectl logs -l app.kubernetes.io/name=o11yag-knowledge-worker -n o11yag-otel | grep -i seed
 #   corpus changed (8 stored, 9 configured) - reseeding
 #   seeded 9 documents
 ```
@@ -75,7 +75,7 @@ Then send anything about a faulty item. Loadgen already does
 (`"the headphones stopped working"`), or by hand:
 
 ```
-kubectl port-forward service/o11yag-knowledge-worker 8001:8001 -n o11yag
+kubectl port-forward service/o11yag-knowledge-worker 8001:8001 -n o11yag-otel
 curl -X POST localhost:8001/answer -H 'Content-Type: application/json' \
   -d '{"ticket_id":"SEC-1","text":"My item is faulty, can I get my money back?"}'
 ```
@@ -129,13 +129,13 @@ reading this does hold tools.
 Restart **mcp-crm** (it is the server that starts lying):
 
 ```
-kubectl rollout restart deployment/o11yag-mcp-crm -n o11yag
+kubectl rollout restart deployment/o11yag-mcp-crm -n o11yag-otel
 ```
 
 The server says so on boot, so there is no doubt which mode it is in:
 
 ```
-kubectl logs -l app.kubernetes.io/name=o11yag-mcp-crm -n o11yag | grep -i poison
+kubectl logs -l app.kubernetes.io/name=o11yag-mcp-crm -n o11yag-otel | grep -i poison
 #   WARNING POISON_TOOL_DESCRIPTION is on - issue_refund advertises an injected
 #           description. This is the security demo, not a fault.
 ```
@@ -176,7 +176,7 @@ Read it off a clean run — it is on the span, and in the worker's log the first
 time it sees a catalogue:
 
 ```
-kubectl logs -l app.kubernetes.io/name=o11yag-action-worker -n o11yag | grep -i digest
+kubectl logs -l app.kubernetes.io/name=o11yag-action-worker -n o11yag-otel | grep -i digest
 #   MCP tool catalogue digest 84c7aad377cabc4e (unpinned; set MCP_TOOLS_DIGEST to this to pin it)
 ```
 
@@ -272,7 +272,7 @@ Redeploy, and check the corpus went back to 8 documents — the reseed runs in b
 directions:
 
 ```
-kubectl logs -l app.kubernetes.io/name=o11yag-knowledge-worker -n o11yag | grep -i seed
+kubectl logs -l app.kubernetes.io/name=o11yag-knowledge-worker -n o11yag-otel | grep -i seed
 #   corpus changed (9 stored, 8 configured) - reseeding
 ```
 

@@ -27,7 +27,7 @@ echo " * * * Creating Dynatrace secret * * * "
 # the namespace or this imperatively-created secret), so don't prompt for a
 # token we already have. Setting DT_API_TOKEN/DT_TENANT still forces a rewrite.
 SECRET_WRITTEN=0
-if [ -z "$DT_API_TOKEN" ] && kubectl get secret o11yag-collector -n o11yag >/dev/null 2>&1; then
+if [ -z "$DT_API_TOKEN" ] && kubectl get secret o11yag-collector -n o11yag-otel >/dev/null 2>&1; then
   echo "Secret o11yag-collector already exists, keeping it"
 else
   if [ -n "$DT_API_TOKEN" ]; then
@@ -50,7 +50,7 @@ else
   kubectl create secret generic o11yag-collector \
     --from-literal=DT_API_TOKEN="$DT_API_TOKEN" \
     --from-literal=DT_OTLP_ENDPOINT=https://$DT_TENANT.live.dynatrace.com/api/v2/otlp \
-    -n o11yag --dry-run=client -o yaml | kubectl apply -f -
+    -n o11yag-otel --dry-run=client -o yaml | kubectl apply -f -
   SECRET_WRITTEN=1
 fi
 
@@ -84,7 +84,7 @@ roll_on_config_change() {
   local name="$1" file="$2"
   local sum
   sum="$(sha256sum "$file" | cut -c1-12)"
-  kubectl patch deployment "$name" -n o11yag --type=strategic \
+  kubectl patch deployment "$name" -n o11yag-otel --type=strategic \
     -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"o11yag.config/checksum\":\"${sum}\"}}}}}" \
     >/dev/null
 }
@@ -177,9 +177,9 @@ roll_on_config_change o11yag-otel-collector collector/k8s/o11yag-collector.yaml
 # changed, so an ordinary redeploy does not churn the Collector.
 if [ "$SECRET_WRITTEN" -eq 1 ]; then
   echo "* * * Secret changed - restarting the collector so it picks up the token * * *"
-  kubectl rollout restart deployment/o11yag-otel-collector -n o11yag
-  kubectl rollout status deployment/o11yag-otel-collector -n o11yag --timeout=120s
+  kubectl rollout restart deployment/o11yag-otel-collector -n o11yag-otel
+  kubectl rollout status deployment/o11yag-otel-collector -n o11yag-otel --timeout=120s
 fi
 
 echo
-echo "Done. Watch it come up with:   kubectl get pods -n o11yag -w"
+echo "Done. Watch it come up with:   kubectl get pods -n o11yag-otel -w"
